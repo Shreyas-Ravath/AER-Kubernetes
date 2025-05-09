@@ -106,8 +106,8 @@ kubectl get nodes
 
 ### Step 4: Deploy App and Database
 
-Update the image in `deployment.yaml` to your ECR image URL.
-## Now to change the ECR Image URL execute following command on cloud shell
+### Update the image in `deployment.yaml` to your ECR image URL.
+### Now to change the ECR Image URL execute following command on cloud shell
 
 ```bash
 cd k8s
@@ -128,11 +128,11 @@ Verify app via LoadBalancer URL.
 ```bash
 kubectl get svc node-app-service
 ```
-# Execute the above command copy the external IP DNS name /IP and access it through any browser http://<externalIP/DNS>
+### Execute the above command copy the external IP DNS name /IP and access it through any browser http://<externalIP/DNS>
 
 ### Step 5: Blue/Green Deployment
 
-# create two different versions to check blue green deployment
+## create two different versions to check blue green deployment
 ```bash
 docker tag $ECR_URI:latest $ECR_URI:v1
 docker push $ECR_URI:v1
@@ -152,7 +152,7 @@ docker push $ECR_URI:v2
 ```
 
 1. Deploy both versions:
-# Since we created new shell we need to configure the shell once again. execute following commands 
+### Since we created new shell we need to configure the shell once again. execute following commands 
 
 ```bash
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
