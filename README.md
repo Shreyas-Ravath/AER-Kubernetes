@@ -106,8 +106,8 @@ kubectl get nodes
 
 ### Step 4: Deploy App and Database
 
-Update the image in `deployment.yaml` to your ECR image URL.
-## Now to change the ECR Image URL execute following command on cloud shell
+### Update the image in `deployment.yaml` to your ECR image URL.
+### Now to change the ECR Image URL execute following command on cloud shell
 
 ```bash
 cd k8s
@@ -127,6 +127,7 @@ Verify app via following command
 ```bash
 kubectl get pods
 ```
+<<<<<<< HEAD
 # After execiting the command, observe there would be three pods created. 
 
 
@@ -134,6 +135,13 @@ kubectl get pods
 
 # create two different versions to check blue green deployment
 # first we will push the existing image to ECR with V1 tag. since we have limited 1GB capacity in Cloushell we would need to delete the images so that we can create different version
+=======
+### Execute the above command copy the external IP DNS name /IP and access it through any browser http://<externalIP/DNS>
+
+### Step 5: Blue/Green Deployment
+
+## create two different versions to check blue green deployment
+>>>>>>> 44647d6f1d2422fe0d53d721a4b557eeffaf3d0d
 ```bash
 docker tag $ECR_URI:latest $ECR_URI:v1
 docker push $ECR_URI:v1
@@ -169,7 +177,7 @@ docker push $ECR_URI:v2
 ```
 
 1. Deploy both versions:
-# Since we created new shell we need to configure the shell once again. execute following commands 
+### Since we created new shell we need to configure the shell once again. execute following commands 
 
 ```bash
 sed -i 's|<your_ecr_repo_url>|381751878913.dkr.ecr.us-east-1.amazonaws.com/capstone-project|g' k8s/deployment-blue.yaml
