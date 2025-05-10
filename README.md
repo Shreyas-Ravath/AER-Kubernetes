@@ -106,7 +106,7 @@ kubectl get nodes
 
 ### Step 4: Deploy App and Database
 
-### Update the image in `deployment.yaml` to your ECR image URL.
+Update the image in `deployment.yaml` to your ECR image URL.
 ### Now to change the ECR Image URL execute following command on cloud shell
 
 ```bash
@@ -127,21 +127,13 @@ Verify app via following command
 ```bash
 kubectl get pods
 ```
-<<<<<<< HEAD
-# After execiting the command, observe there would be three pods created. 
+### After execiting the command, observe there would be three pods created. 
 
 
 ### Step 5: Blue/Green Deployment
 
-# create two different versions to check blue green deployment
-# first we will push the existing image to ECR with V1 tag. since we have limited 1GB capacity in Cloushell we would need to delete the images so that we can create different version
-=======
-### Execute the above command copy the external IP DNS name /IP and access it through any browser http://<externalIP/DNS>
-
-### Step 5: Blue/Green Deployment
-
-## create two different versions to check blue green deployment
->>>>>>> 44647d6f1d2422fe0d53d721a4b557eeffaf3d0d
+### create two different versions to check blue green deployment
+### first we will push the existing image to ECR with V1 tag. since we have limited 1GB capacity in Cloushell we would need to delete the images so that we can create different version
 ```bash
 docker tag $ECR_URI:latest $ECR_URI:v1
 docker push $ECR_URI:v1
@@ -150,7 +142,7 @@ docker rmi $ECR_URI:latest
 docker rmi capstone-node-app:latest
 ```
 
-# Delete the current cloudshell. Go to Actions in cloud shell and delete the current shell. Open a new shell. As all variables are lost we need to configure the shell once again. execute following commands. 
+### Delete the current cloudshell. Go to Actions in cloud shell and delete the current shell. Open a new shell. As all variables are lost we need to configure the shell once again. execute following commands. 
 ```bash
 curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
 sudo mv /tmp/eksctl /usr/local/bin
@@ -164,7 +156,7 @@ aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_U
 aws eks update-kubeconfig --name capstone-cluster --region $REGION
 ```
 
-# Now Modify app.js file to differentiate the version of app deployed. 
+### Now Modify app.js file to differentiate the version of app deployed. 
 
 ```bash
 
@@ -190,7 +182,7 @@ Verify app via LoadBalancer URL.
 ```bash
 kubectl get svc node-app-service
 ```
-# After execiting the command, copy the external-IP value and access it through any browser http://<externalIP/DNS>
+### After execiting the command, copy the external-IP value and access it through any browser http://<externalIP/DNS>
 
 2. Update `service.yaml` to switch between blue or green:
 
