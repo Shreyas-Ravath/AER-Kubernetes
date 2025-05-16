@@ -41,7 +41,7 @@ eksctl version
 
 ## Step 2: Containerize the Application and Push to ECR
 
-### Before starting download all project files from github, execute following on cloudshell
+Before starting download all project files from github, execute following on cloudshell
 ```bash
 mkdir /home/ec2-user/capstone 
 cd /home/ec2-user/capstone
@@ -49,7 +49,7 @@ git init
 git pull https://github.com/Shreyas-Ravath/AER-Kubernetes.git
 ```
 
-### Once project files are downloaded, we will execute following commands to set the variables. 
+Once project files are downloaded, we will execute following commands to set the variables. 
 
 ```bash 
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
@@ -100,8 +100,8 @@ kubectl get nodes
 
 ## Step 4: Deploy App and Database
 
-Update the image in `deployment.yaml` to ECR image URL.
-### Following script can be executed if the region is us-east-1 and same test account allotted.
+Update the image in `deployment.yaml` to ECR image URL
+Following script can be executed if the region is us-east-1 and same test account allotted.
 
 ```bash
 cd /home/ec2-user/capstone/k8s
@@ -122,13 +122,13 @@ Verify app via following command
 ```bash
 kubectl get pods
 ```
-### Notice pods for postgres and node-app is created. We can validate the node-app using the service external IP. since we are yet to do B/G deployment. the version is set to default in deployment. 
+Notice pods for postgres and node-app is created. We can validate the node-app using the service external IP. since we are yet to do B/G deployment. the version is set to default in deployment. 
 
 
 ### Step 5: Blue/Green Deployment
 
-### create two different versions to check blue green deployment
-### first we will push the existing image to ECR with V1 and again the same for V2. We are going to use v1 as blue env, v2 as Green
+create two different versions to check blue green deployment
+first we will push the existing image to ECR with V1 and again the same for V2. We are going to use v1 as blue env, v2 as Green
 ```bash
 docker tag $ECR_URI:latest $ECR_URI:v1
 docker push $ECR_URI:v1
@@ -137,7 +137,7 @@ docker push $ECR_URI:v2
 ```
 
 1. Deploy pods for both versions:
-### Now that the v1 and v2 images are created, lets update the repo url on our deployment files and create pods. Execute below commands
+Now that the v1 and v2 images are created, lets update the repo url on our deployment files and create pods. Execute below commands
 ```bash
 sed -i 's|<your_ecr_repo_url>|381751878913.dkr.ecr.us-east-1.amazonaws.com/capstone-project|g' k8s/deployment-blue.yaml
 sed -i 's|<your_ecr_repo_url>|381751878913.dkr.ecr.us-east-1.amazonaws.com/capstone-project|g' k8s/deployment-green.yaml
@@ -149,8 +149,8 @@ Verify app via LoadBalancer URL.
 ```bash
 kubectl get svc node-app-service
 ```
-### After exiting the command, copy the external-IP value and access it through any browser http://<externalIP/DNS>
-### We still see the version default in the landing page, as we have not defined any version to be used yet. the request may go to green or blue or default pod based on value set in service.yaml 
+After exiting the command, copy the external-IP value and access it through any browser http://<externalIP/DNS>
+We still see the version default in the landing page, as we have not defined any version to be used yet. the request may go to green or blue or default pod based on value set in service.yaml 
 
 2. Update `service.yaml` to switch between blue or green:
 
@@ -166,19 +166,19 @@ Apply:
 kubectl apply -f k8s/service.yaml
 ```
 
-### Now that service is updated to consider node-app & version tags, now the requests will be forwarded to the pod with both tags. This confirm the blue/green deployment. 
+Now that service is updated to consider node-app & version tags, now the requests will be forwarded to the pod with both tags. This confirm the blue/green deployment. 
 
 3. To check the Autoscaling, lets switch the service to use green environment, and to create stress on pods, we will execute following commands.
 ```bash
 kubectl run load-generator --image=busybox --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://<externalIP/DNS>; done"
 ```
-### Once the above load is generated while being in green deployment, see hpa triggers and create pods as per the settings in hpa
+Once the above load is generated while being in green deployment, see hpa triggers and create pods as per the settings in hpa
 ```bash
 kubectl get pods
 kubectl get hpa
 ```
 
-### This concludes the kubernetes capstone project, with db created as service, front end using db created with service name and Blue green deployment for zero downtime and also hpa for autoscaling. 
+This concludes the kubernetes capstone project, with db created as service, front end using db created with service name and Blue green deployment for zero downtime and also hpa for autoscaling. 
 
 ## Step 6: Clean Up
 
