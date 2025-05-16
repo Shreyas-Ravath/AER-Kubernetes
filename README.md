@@ -43,6 +43,7 @@ eksctl version
 
 ### Before starting download all project files from github, execute following on cloudshell
 ```bash
+mkdir /home/ec2-user/capstone 
 cd /home/ec2-user/capstone
 git init
 git pull https://github.com/Shreyas-Ravath/AER-Kubernetes.git
@@ -255,6 +256,10 @@ eksctl delete cluster \
     --region "$REGION" && \
     echo "EKS cluster '$CLUSTER_NAME' deleted successfully." || \
     echo "Failed to delete EKS cluster '$CLUSTER_NAME'."
+
+# Step 5: Delete capstone folder holding the project files. 
+rm -rf /home/ec2-user/capstone
+
 
 echo "Cleanup process completed."
 
