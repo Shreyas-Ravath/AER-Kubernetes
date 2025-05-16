@@ -26,10 +26,10 @@ node-capstone-app/
 
 ## 🚀 Steps to Execute
 
-### Step 1: Create and Configure Deployment Environment
+## Step 1: Create and Configure Deployment Environment
 Sign into AWS Console
 Get to the EC2 Service, and connect to KubeDeploymentServer 
-
+### Everything is already installed. 
 ```bash
 # Ensure Docker, eksctl, and kubectl are installed 
 aws --version
@@ -37,9 +37,9 @@ docker --version
 kubectl version --client
 eksctl version
 ```
-# Everything is already installed. 
 
-### Step 2: Containerize the Application and Push to ECR
+
+## Step 2: Containerize the Application and Push to ECR
 
 ### Before starting download all project files from github, execute following on cloudshell
 ```bash
@@ -80,7 +80,7 @@ docker tag capstone-node-app:latest $ECR_URI:latest
 docker push $ECR_URI:latest
 ```
 
-### Step 3: Create EKS Cluster
+## Step 3: Create EKS Cluster
 
 ```bash
 eksctl create cluster -f eks-cluster.yaml
@@ -98,7 +98,7 @@ Verify:
 kubectl get nodes
 ```
 
-### Step 4: Deploy App and Database
+## Step 4: Deploy App and Database
 
 Update the image in `deployment.yaml` to ECR image URL.
 ### Following script can be executed if the region is us-east-1 and same test account allotted.
@@ -180,7 +180,7 @@ kubectl get hpa
 
 ### This concludes the kubernetes capstone project, with db created as service, front end using db created with service name and Blue green deployment for zero downtime and also hpa for autoscaling. 
 
-### Step 6: Clean Up
+## Step 6: Clean Up
 
 ```bash
 # Set required variables
