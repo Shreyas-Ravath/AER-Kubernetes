@@ -127,44 +127,16 @@ kubectl get pods
 ### Step 5: Blue/Green Deployment
 
 ### create two different versions to check blue green deployment
-### first we will push the existing image to ECR with V1 tag. since we have limited 1GB capacity in Cloushell we would need to delete the images so that we can create different version
+### first we will push the existing image to ECR with V1 and again the same for V2. We are going to use v1 as blue env, v2 as Green
 ```bash
 docker tag $ECR_URI:latest $ECR_URI:v1
 docker push $ECR_URI:v1
-docker rmi $ECR_URI:v1
-docker rmi $ECR_URI:latest
-docker rmi capstone-node-app:latest
-```
-
-### Delete the current cloudshell. Go to Actions in cloud shell and delete the current shell. Open a new shell. As all variables are lost we need to configure the shell once again. execute following commands. 
-```bash
-curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
-sudo mv /tmp/eksctl /usr/local/bin
-AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
-REGION=us-east-1  # update if using another region
-REPO_NAME=capstone-project
-ECR_URI=${AWS_ACCOUNT_ID}.dkr.ecr.${REGION}.amazonaws.com/${REPO_NAME}
-git init
-git pull https://github.com/Shreyas-Ravath/AER-Kubernetes.git
-aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_URI
-aws eks update-kubeconfig --name capstone-cluster --region $REGION
-```
-
-### Now Modify app.js file to differentiate the version of app deployed. 
-
-```bash
-
-sed -i 's/Hello from the Capstone Node.js App!/Hello from the GREEN version of the Capstone App!/' ./app.js
-
-docker build -t $ECR_URI .
-
 docker tag $ECR_URI:latest $ECR_URI:v2
 docker push $ECR_URI:v2
 ```
 
 1. Deploy both versions:
-### Since we created new shell we need to configure the shell once again. execute following commands 
-
+### Now that the v1 and v2 images are created, lets update the repo url on our deployment files and create pods. Execute below commands
 ```bash
 sed -i 's|<your_ecr_repo_url>|381751878913.dkr.ecr.us-east-1.amazonaws.com/capstone-project|g' k8s/deployment-blue.yaml
 sed -i 's|<your_ecr_repo_url>|381751878913.dkr.ecr.us-east-1.amazonaws.com/capstone-project|g' k8s/deployment-green.yaml
@@ -177,6 +149,7 @@ Verify app via LoadBalancer URL.
 kubectl get svc node-app-service
 ```
 ### After execiting the command, copy the external-IP value and access it through any browser http://<externalIP/DNS>
+### Now since we are not using any selector value based on version, app will be loaded from any of the three pods based on the just node-app tag value
 
 2. Update `service.yaml` to switch between blue or green:
 
@@ -191,6 +164,9 @@ Apply:
 ```bash
 kubectl apply -f k8s/service.yaml
 ```
+
+### Since, we have updated the service yaml file to consider node-app & version tags, now the requests will be forwarded to the pod with both tags. This confirm the blue green deployment. 
+
 
 ### Step 6: Clean Up
 
