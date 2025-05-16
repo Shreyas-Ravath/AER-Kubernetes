@@ -18,4 +18,7 @@ spec:
       - name: node-app
         image: <your_ecr_repo_url>:v1
         ports:
-        - containerPort: 3000
+          - containerPort: 3000
+        env:
+          - name: APP_VERSION
+            value: "blue"
