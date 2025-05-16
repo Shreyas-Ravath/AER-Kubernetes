@@ -167,6 +167,16 @@ kubectl apply -f k8s/service.yaml
 
 ### Since, we have updated the service yaml file to consider node-app & version tags, now the requests will be forwarded to the pod with both tags. This confirm the blue green deployment. 
 
+3. To check the Autoscaling ensure you execute following commands to create requests to our app. 
+```bash
+kubectl run load-generator --image=busybox --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://<externalIP/DNS>; done"
+```
+### Once the above load is generated while being in green deployment, see hpa triggers and create pods as per the settings in hpa
+```bash
+kubectl get pods
+kubectl get hpa
+```
+
 
 ### Step 6: Clean Up
 
@@ -174,7 +184,7 @@ kubectl apply -f k8s/service.yaml
 # Set required variables
 REPO_NAME="capstone-project"
 REGION="us-east-1"  # Change to your desired region
-CLUSTER_NAME="capstone-cluster"
+CLUSTER_NAME="capstone"
 
 echo "Starting cleanup process for ECR repository '$REPO_NAME' and EKS cluster '$CLUSTER_NAME'..."
 
