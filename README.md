@@ -49,7 +49,7 @@ git init
 git pull https://github.com/Shreyas-Ravath/AER-Kubernetes.git
 ```
 
-### Once project files are downloaded, we have to set variable which is being used in next commands. 
+### Once project files are downloaded, we will execute following commands to set the variables. 
 
 ```bash 
 AWS_ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
@@ -89,7 +89,7 @@ eksctl create cluster -f eks-cluster.yaml
 Update kubeconfig:
 
 ```bash
-aws eks update-kubeconfig --name capstone-cluster --region $REGION
+aws eks update-kubeconfig --name capstone --region $REGION
 ```
 
 Verify:
@@ -100,8 +100,8 @@ kubectl get nodes
 
 ### Step 4: Deploy App and Database
 
-Update the image in `deployment.yaml` to your ECR image URL.
-### Now to change the ECR Image URL execute following command on cloud shell
+Update the image in `deployment.yaml` to ECR image URL.
+### Following script can be executed if the region is us-east-1 and same test account allotted.
 
 ```bash
 cd /home/ec2-user/capstone/k8s
@@ -122,7 +122,7 @@ Verify app via following command
 ```bash
 kubectl get pods
 ```
-### After execiting the command, observe there would be three pods created. 
+### Notice pods for postgres and node-app is created. We can validate the node-app using the service external IP. since we are yet to do B/G deployment. the version is set to default in deployment. 
 
 
 ### Step 5: Blue/Green Deployment
@@ -136,7 +136,7 @@ docker tag $ECR_URI:latest $ECR_URI:v2
 docker push $ECR_URI:v2
 ```
 
-1. Deploy both versions:
+1. Deploy pods for both versions:
 ### Now that the v1 and v2 images are created, lets update the repo url on our deployment files and create pods. Execute below commands
 ```bash
 sed -i 's|<your_ecr_repo_url>|381751878913.dkr.ecr.us-east-1.amazonaws.com/capstone-project|g' k8s/deployment-blue.yaml
@@ -149,8 +149,8 @@ Verify app via LoadBalancer URL.
 ```bash
 kubectl get svc node-app-service
 ```
-### After execiting the command, copy the external-IP value and access it through any browser http://<externalIP/DNS>
-### Now since we are not using any selector value based on version, app will be loaded from any of the three pods based on the just node-app tag value
+### After exiting the command, copy the external-IP value and access it through any browser http://<externalIP/DNS>
+### We still see the version default in the landing page, as we have not defined any version to be used yet. the request may go to green or blue or default pod based on value set in service.yaml 
 
 2. Update `service.yaml` to switch between blue or green:
 
@@ -166,9 +166,9 @@ Apply:
 kubectl apply -f k8s/service.yaml
 ```
 
-### Since, we have updated the service yaml file to consider node-app & version tags, now the requests will be forwarded to the pod with both tags. This confirm the blue green deployment. 
+### Now that service is updated to consider node-app & version tags, now the requests will be forwarded to the pod with both tags. This confirm the blue/green deployment. 
 
-3. To check the Autoscaling ensure you execute following commands to create requests to our app. 
+3. To check the Autoscaling, lets switch the service to use green environment, and to create stress on pods, we will execute following commands.
 ```bash
 kubectl run load-generator --image=busybox --restart=Never -- /bin/sh -c "while true; do wget -q -O- http://<externalIP/DNS>; done"
 ```
@@ -178,6 +178,7 @@ kubectl get pods
 kubectl get hpa
 ```
 
+### This concludes the kubernetes capstone project, with db created as service, front end using db created with service name and Blue green deployment for zero downtime and also hpa for autoscaling. 
 
 ### Step 6: Clean Up
 
