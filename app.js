@@ -1,10 +1,11 @@
 const express = require('express');
-const {pool} = require('pg');
+const { Pool } = require('pg'); 
+
 const app = express();
 const PORT = process.env.PORT || 3000;
-const VERSION = process.env.APP_VERSION || 'UNKNOWN'
+const VERSION = process.env.APP_VERSION || 'UNKNOWN';
 
-const pool = new Pool ({
+const pool = new Pool({
   user: 'postgres',
   host: 'db-service',
   database: 'postgres',

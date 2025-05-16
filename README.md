@@ -115,6 +115,7 @@ kubectl apply -f k8s/db-deployment.yaml
 kubectl apply -f k8s/db-service.yaml
 kubectl apply -f k8s/deployment.yaml
 kubectl apply -f k8s/service.yaml
+kubectl apply -f k8s/hpa.yaml
 ```
 Verify app via following command
 ```bash
