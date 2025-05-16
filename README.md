@@ -19,38 +19,31 @@ node-capstone-app/
 │   ├── db-service.yaml
 │   ├── deployment-blue.yaml
 │   ├── deployment-green.yaml
+|   ├── hpa.yaml
+    
+
 ```
 
 ## 🚀 Steps to Execute
 
 ### Step 1: Create and Configure Deployment Environment
 Sign into AWS Console
-Click the CloudShell icon (top-right nav bar)
-  o	If you are unable to create a cloudshell, ensure following VPC endpoints are created on the region you are trying to create cloudshell
-      com.amazonaws.<region>.ssm
-      com.amazonaws.<region>.ec2messages
-      com.amazonaws.<region>.ssmmessages
-
-In AWS CloudShell:
+Get to the EC2 Service, and connect to KubeDeploymentServer 
 
 ```bash
-# Ensure Docker, eksctl, and kubectl are installed (CloudShell usually has these)
+# Ensure Docker, eksctl, and kubectl are installed 
 aws --version
 docker --version
 kubectl version --client
 eksctl version
-
-#If eksctl is not installed, execute following commands. 
-```bash
-curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_Linux_amd64.tar.gz" | tar xz -C /tmp
-sudo mv /tmp/eksctl /usr/local/bin
-eksctl version
 ```
+# Everything is already installed. 
 
 ### Step 2: Containerize the Application and Push to ECR
 
 ### Before starting download all project files from github, execute following on cloudshell
 ```bash
+cd /home/ec2-user/capstone
 git init
 git pull https://github.com/Shreyas-Ravath/AER-Kubernetes.git
 ```
@@ -110,7 +103,7 @@ Update the image in `deployment.yaml` to your ECR image URL.
 ### Now to change the ECR Image URL execute following command on cloud shell
 
 ```bash
-cd k8s
+cd /home/ec2-user/capstone/k8s
 sed -i 's|<your_ecr_repo_url>|381751878913.dkr.ecr.us-east-1.amazonaws.com/capstone-project|g' deployment.yaml
 cd ..
 ```
