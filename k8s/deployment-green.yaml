@@ -15,11 +15,17 @@ spec:
         version: green
     spec:
       containers:
-      - name: node-app
-        image: <your_ecr_repo_url>:v2
-        ports:
-          - containerPort: 3000
-        env:
-          - name: APP_VERSION
-            value: "green"
-
+        - name: node-app
+          image: <your_ecr_repo_url>:v2
+          ports:
+            - containerPort: 3000
+          env:
+            - name: APP_VERSION
+              value: "green"
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "250m"
+              memory: "256Mi"
