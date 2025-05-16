@@ -2,10 +2,24 @@ apiVersion: eksctl.io/v1alpha5
 kind: ClusterConfig
 
 metadata:
-  name: capstone-cluster
+  name: capstone
   region: us-east-1
 
 nodeGroups:
   - name: ng-capstone
     instanceType: t3.medium
     desiredCapacity: 3
+    amiFamily: AmazonLinux2
+    privateNetworking: false 
+    ssh:
+      allow: true
+      publicKeyName: ROITraining 
+    iam:
+      withAddonPolicies:
+        imageBuilder: true
+        autoScaler: true
+        externalDNS: true
+        certManager: true
+        ebs: true
+        albIngress: true
+        cloudWatch: true
